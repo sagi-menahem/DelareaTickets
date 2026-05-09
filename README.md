@@ -3,6 +3,12 @@
   <p><strong>Football Tickets & Travel Packages — E-commerce Platform</strong></p>
   <p>A production Next.js 16 e-commerce platform built and shipped end-to-end for a football ticket and travel-package vendor. Hebrew-first RTL, bilingual (he/en), hosted-page payments, deployed on Vercel.</p>
 
+  <p>
+    <a href="https://delareatickets.com/he" target="_blank">
+      <img src="https://img.shields.io/badge/Live_Site-delareatickets.com-22C55E?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Site" />
+    </a>
+  </p>
+
   <br/>
 
   ![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=nextdotjs&logoColor=white)

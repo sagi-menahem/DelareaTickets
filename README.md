@@ -1,7 +1,7 @@
 <div align="center">
   <h1>DelareaTickets</h1>
   <p><strong>Football Tickets & Travel Packages — E-commerce Platform</strong></p>
-  <p>A production Next.js 16 e-commerce platform built and shipped end-to-end for a football ticket and travel-package vendor. Hebrew-first RTL, bilingual (he/en), hosted-page payments, deployed on Vercel.</p>
+  <p>A production Next.js 16 e-commerce platform built and shipped end-to-end for a football ticket and travel-package vendor. Hebrew-first RTL, bilingual (he/en), hosted-page payments, a WhatsApp CRM with automated customer journeys, and a commissioned sales-agent network. Deployed on Vercel.</p>
 
   <p>
     <a href="https://delareatickets.com/he" target="_blank">
@@ -51,9 +51,11 @@
 
 ## Highlights
 
-- **~50+ pages** rendered: 4 marketing route groups, 20+ admin views, dashboard + auth flows
+- **100+ pages** rendered: 4 marketing route groups, 75 admin views across ~25 sections, dashboard + auth flows
 - **Bilingual RTL** — Hebrew-first with English fallback, cookie-driven locale, DB-backed CMS with entity-level fallback chain
-- **Hand-written SQL migrations** (100+ numbered files) — no Drizzle Kit codegen, full control over indexes, RLS, partial-index strategy
+- **WhatsApp CRM** — live inbox over Supabase Realtime, journey-based automations with quiet-hours scheduling, broadcasts with preflight quota checks, and opt-out enforcement (STOP/START keywords) on every send path
+- **Sales-agent network** — personal agent links with attribution, percentage / fixed / hybrid commission rules, a commission ledger, and manual payout batches
+- **Hand-written SQL migrations** (190+ numbered files) — no Drizzle Kit codegen, full control over indexes, RLS, partial-index strategy
 - **`pg_trgm` GIN indexes** powering admin ILIKE search across users, teams, events, orders, leagues
 - **Single-region deployment** — Node functions co-located with the database, RTT-aware, no over-engineered edge routing
 - **Lighthouse-tuned** — Partial Pre-Rendering on marketing routes, `cacheComponents: true` on Next.js 16, dynamic imports below the fold
@@ -70,7 +72,7 @@
 | **Database**     | Supabase Postgres + Drizzle ORM (types only) + hand-written SQL migrations   |
 | **Auth**         | Supabase Auth (email + Google OAuth) + Row-Level Security                    |
 | **Payments**     | Hosted-page redirect + IPN webhook verification                              |
-| **External**     | Football fixtures API integration                                            |
+| **External**     | Football fixtures API · WhatsApp messaging API · invoicing provider API      |
 | **Hosting**      | Vercel                                                                       |
 | **Monitoring**   | Sentry + GA4 + transactional email webhooks                                  |
 | **Tests**        | Vitest                                                                       |
@@ -100,7 +102,7 @@
                 Supabase Auth · Supabase Storage
 ```
 
-External services: error monitoring + source maps, transactional and marketing email, rate limiting, optional outbound automation.
+External services: error monitoring + source maps, transactional and marketing email, rate limiting, WhatsApp messaging provider, invoicing provider, optional outbound automation.
 
 ---
 
@@ -124,14 +126,23 @@ Percentage and fixed-amount discounts, scoped (global / league / event), with mi
 ### Add-on Engine
 Per-event configuration of flights / hotels / cancellation / custom add-ons. Drives the interactive purchase flow with stadium seat maps, persists selections in a separate `order_addon_selections` table, and powers admin-side bulk seeding.
 
+### WhatsApp CRM & Automations
+Full messaging layer over a WhatsApp provider API: a live admin inbox (chat list, conversation pane, composer) streaming over Supabase Realtime, media attachments, and per-order message timelines. Journey-based automations send scheduled messages around each customer's trip; broadcasts run preflight quota checks before dispatch. Compliance is enforced at the send path, not the UI: every outbound route checks opt-out state, STOP/START/HELP keywords are auto-handled, marketing messages carry the legally required footer, and scheduled automation reminders are clamped to a quiet-hours window. Delivery-status tracking feeds per-automation analytics, and WhatsApp message history is redacted on GDPR user deletion.
+
+### Sales Agents
+Commissioned-agent module: each agent gets a personal link (with slug aliases) whose clicks and orders are attributed to them. Commission rules support percentage / fixed / hybrid models, accrue into a ledger, and settle through manual payout batches. Agents get their own dashboard; admins get per-agent analytics built on dedicated event + daily-rollup tables.
+
+### Invoicing
+Tax documents are issued from the admin panel through an Israeli invoicing provider's API, linked to orders in a dedicated `order_documents` table, with configurable delivery to the customer.
+
 ### Admin Panel
-20+ pages — catalog (4-level hierarchy: leagues → teams → events → ticket categories), add-ons editor, pricing rules, stadium maps, leagues / teams toggles, orders + customers, coupons, CMS (homepage / navigation / trust badges), FAQs / testimonials / contact, marketing emails, analytics, sync dashboard (+ history, pending queue, API browser), audit log, on-demand DB backups. Permission keys with assertion at every server action; owners bypass.
+75 pages across ~25 sections — catalog (4-level hierarchy: leagues → teams → events → ticket categories), add-ons editor, pricing rules (+ pending market-price review), stadium maps, leagues / teams toggles, orders (incl. manual multi-line orders) + customers, coupons, agents, CMS (homepage / navigation / trust badges / legal pages), FAQs / testimonials / contact, inquiries inbox, marketing emails + popups, WhatsApp inbox + broadcasts, automations, analytics, integrations (football sync, market pricing, currency), audit log, on-demand DB backups. Permission keys with assertion at every server action; owners bypass.
 
 ### CMS
 Database-backed (`cms_content`) with bilingual fields and entity-level fallback chain. Three admin pages cover homepage, navigation/footer, and trust badges. Public CMS assets served from Supabase Storage.
 
 ### Auth
-Supabase Auth (email + Google OAuth). Middleware gates dashboard and settings routes. Row-Level Security policies applied to 6 tables as a second line of defence even for admin-only data.
+Supabase Auth (email + Google OAuth). Middleware gates dashboard and settings routes. Row-Level Security policies applied to 36 tables as a second line of defence even for admin-only data.
 
 ---
 
@@ -154,6 +165,12 @@ Serialize cron runs (one for the football sync, one for the pricing pipeline, pl
 
 ### Manual `Sentry.startSpan({ op: 'db.query' })`
 Wrappers on heavy uncached fetchers, because `@sentry/nextjs` does not auto-instrument `postgres-js` (porsager/postgres). Without these, Drizzle queries don't appear as DB spans in traces.
+
+### Shared transient-network-error classification
+Every outbound HTTP client (WhatsApp provider, FX rates, invoicing) judges connection blips through one `isTransientNetworkError` helper — undici error codes on the `cause` of a `fetch failed` `TypeError` — so an upstream hiccup is retried/downgraded consistently instead of paging Sentry as an unclassified `TypeError`, while genuine programming errors are never mislabelled as transient.
+
+### Consent enforced at the send path, not the UI
+WhatsApp opt-out state is checked inside every outbound send route (automations, broadcasts, manual inbox sends), with STOP/START/HELP keyword auto-replies handled at the webhook — disabling a button in the admin UI is never the compliance boundary.
 
 ---
 

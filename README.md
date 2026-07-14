@@ -49,6 +49,18 @@
 
 ---
 
+## How This Was Built
+
+Built solo, **AI-first**: I orchestrate AI coding agents (Claude Code, Codex) through a documented methodology rather than writing every line by hand — the engineering discipline is the point, not the speed.
+
+- **`AGENTS.md` as the single source of truth** — a rules file in the repo defines the architecture, conventions, and hard constraints every agent must obey: money never in floats, Row-Level Security on privileged tables, independent server-side payment re-verification.
+- **Guardrail scripts & audit pipelines** — automated checks run on every change (RTL/i18n correctness, Server Action security, transactional-money rules), so quality is enforced by tooling, not vigilance.
+- **The engineer decides, the agent executes** — every schema, payment flow, and architectural choice on this page was designed and reviewed by me. Agents accelerate implementation; they never own the design.
+
+The result: one engineer delivering a production system at team-level velocity — with the monitoring, hand-written migrations, and idempotency discipline the decisions below reflect.
+
+---
+
 ## Highlights
 
 - **100+ pages** rendered: 4 marketing route groups, 75 admin views across ~25 sections, dashboard + auth flows

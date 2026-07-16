@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
   <h1>DelareaTickets</h1>
   <p><strong>Football Tickets & Travel Packages — E-commerce Platform</strong></p>
   <p>A production Next.js 16 e-commerce platform built and shipped end-to-end for a football ticket and travel-package vendor. Hebrew-first RTL, bilingual (he/en), hosted-page payments, a WhatsApp CRM with automated customer journeys, and a commissioned sales-agent network. Deployed on Vercel.</p>
@@ -51,13 +51,7 @@
 
 ## How This Was Built
 
-Built solo, **AI-first**: I orchestrate AI coding agents (Claude Code, Codex) through a documented methodology rather than writing every line by hand — the engineering discipline is the point, not the speed.
-
-- **`AGENTS.md` as the single source of truth** — a rules file in the repo defines the architecture, conventions, and hard constraints every agent must obey: money never in floats, Row-Level Security on privileged tables, independent server-side payment re-verification.
-- **Guardrail scripts & audit pipelines** — automated checks run on every change (RTL/i18n correctness, Server Action security, transactional-money rules), so quality is enforced by tooling, not vigilance.
-- **The engineer decides, the agent executes** — every schema, payment flow, and architectural choice on this page was designed and reviewed by me. Agents accelerate implementation; they never own the design.
-
-The result: one engineer delivering a production system at team-level velocity — with the monitoring, hand-written migrations, and idempotency discipline the decisions below reflect.
+Built AI-first: I orchestrate AI coding agents (Claude Code, Codex) under guardrail scripts and audit pipelines that run on every change — but every schema, payment flow, and architectural decision here was designed and reviewed by me. Agents accelerate implementation; they don't own the design.
 
 ---
 

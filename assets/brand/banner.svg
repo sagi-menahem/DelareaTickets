@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="title desc">
+<title id="title">DelareaTickets</title><desc id="desc">CLIENT PROJECT. Football tickets &amp; travel, end to end. By Sagi Menahem.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111c2c"/><stop offset="1" stop-color="#080e18"/></linearGradient><pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#ffffff" stroke-opacity=".035"/></pattern><linearGradient id="line"><stop stop-color="#38bdf8"/><stop offset="1" stop-color="#38bdf8" stop-opacity="0"/></linearGradient></defs>
+<rect width="1280" height="320" rx="20" fill="url(#bg)"/><rect width="1280" height="320" rx="20" fill="url(#grid)"/>
+<path d="M0 316H1280" stroke="url(#line)" stroke-width="8"/>
+<g fill="none" stroke="#38bdf8"><circle cx="1130" cy="160" r="135" opacity=".12"/><circle cx="1130" cy="160" r="100" opacity=".23"/><path d="M995 160H1265M1130 25V295" opacity=".16"/></g>
+<rect x="1073" y="103" width="114" height="114" rx="26" fill="#101e2e" stroke="#38bdf8" stroke-opacity=".65"/>
+<text x="1130" y="174" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="38" font-weight="700" fill="#38bdf8">DT</text>
+<g font-family="Segoe UI,Arial,sans-serif"><text x="60" y="58" font-size="15" font-weight="600" letter-spacing="2.5" fill="#38bdf8">CLIENT PROJECT</text>
+<text x="56" y="136" font-size="58" font-weight="700" letter-spacing="-2" fill="#f8fafc">DelareaTickets</text>
+<text x="60" y="186" font-size="25" fill="#b8c5d8">Football tickets &amp; travel, end to end</text>
+<path d="M60 247H920" stroke="#29374a"/>
+<text x="60" y="285" font-size="14" letter-spacing="2" fill="#9aaac0">SAGI MENAHEM  /  ENGINEERING PORTFOLIO</text>
+<text x="920" y="285" text-anchor="end" font-size="13" fill="#9aaac0">delareatickets.com/he</text></g></svg>

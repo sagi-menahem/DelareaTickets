@@ -1,4 +1,4 @@
-![DelareaTickets — football tickets and travel](assets/brand/banner.svg)
+![DelareaTickets — football tickets and travel](assets/brand/banner.png)
 
 # DelareaTickets
 
